@@ -1,0 +1,67 @@
+version: '3.1'
+services:
+    mailhog:
+        image: 'mailhog/mailhog:latest'
+        container_name: blogger-api-mailhog
+        ports:
+            - '8025:8025'
+
+    redis:
+        image: 'redis:alpine'
+        container_name: blogger-api-redis
+        healthcheck:
+            test: [ "CMD", "redis-cli", "ping" ]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+
+    mysql:
+        image: 'mysql:8.0'
+        container_name: blogger-api-mysql
+        working_dir: /application
+        volumes:
+            - '.:/application'
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=bloggerapi
+            - MYSQL_USER=bloggerapi
+            - MYSQL_PASSWORD=bloggerapi
+        ports:
+            - '9002:3306'
+
+    webserver:
+        image: 'nginx:alpine'
+        container_name: blogger-api-webserver
+        working_dir: /application
+        depends_on:
+            - php-fpm
+        volumes:
+            - '.:/application'
+            - './phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf'
+        healthcheck:
+            test: wget --quiet --tries=1 --spider http://localhost || exit 1z
+            interval: 30s
+            timeout: 10s
+            retries: 5
+        ports:
+            - '9000:80'
+
+    php-fpm:
+        build: phpdocker/php-fpm
+        container_name: blogger-api-php-fpm
+        working_dir: /application
+        volumes:
+            - '.:/application'
+            - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.2/fpm/conf.d/99-overrides.ini'
+
+    swagger-ui:
+        image: swaggerapi/swagger-ui
+        container_name: blogger-api-openapi
+        ports:
+            - "3000:8080"
+        volumes:
+            - './backend/openapi:/usr/share/nginx/html/openapi'
+        environment:
+            API_URL: ./openapi/index.yaml
+            URLS: "[{ url: './openapi/index.yaml', name: 'Blogger Open API'},
+                  ]"
