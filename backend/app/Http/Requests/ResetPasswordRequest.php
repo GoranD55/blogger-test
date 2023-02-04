@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Exceptions\Hello;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserRegistrationRequest extends FormRequest
+class ResetPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,7 +14,6 @@ class UserRegistrationRequest extends FormRequest
     public function authorize()
     {
         return true;
-//        return false;
     }
 
     /**
@@ -26,10 +24,8 @@ class UserRegistrationRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => ['required', 'string', 'min:3', 'max:50'],
-            'last_name' => ['required', 'string', 'min:3', 'max:50'],
-            'email' => ['required', 'email', 'unique:users'],
-            'password' => ['required', 'string', 'confirmed'],
+            'email' => ['required', 'email'],
+            'password' => ['required', 'min:9', 'confirmed']
         ];
     }
 }

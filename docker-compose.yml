@@ -21,6 +21,7 @@ services:
         working_dir: /application
         volumes:
             - '.:/application'
+            - 'blogger-api-mysql-volume:/var/lib/mysql'
         environment:
             - MYSQL_ROOT_PASSWORD=root
             - MYSQL_DATABASE=bloggerapi
@@ -65,3 +66,6 @@ services:
             API_URL: ./openapi/index.yaml
             URLS: "[{ url: './openapi/index.yaml', name: 'Blogger Open API'},
                   ]"
+
+volumes:
+    blogger-api-mysql-volume:
