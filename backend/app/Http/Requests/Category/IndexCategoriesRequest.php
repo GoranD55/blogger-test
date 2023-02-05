@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Category;
 
+use App\Exceptions\ReaderCannotAccessCategoriesException;
 use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -17,6 +18,11 @@ class IndexCategoriesRequest extends FormRequest
         // we assume that if the user is a reader, then he does not need a list of categories for work
         // otherwise we can remove this rule
         return $this->user()->can('viewAny', Category::class);
+    }
+
+    public function failedAuthorization()
+    {
+        throw new ReaderCannotAccessCategoriesException();
     }
 
     /**
