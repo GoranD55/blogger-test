@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Http\Requests\Blog\DeleteBlogRequest;
 use App\Http\Requests\Blog\RestoreBlogRequest;
 use App\Http\Requests\Blog\StoreBlogRequest;
@@ -27,13 +28,13 @@ class BlogsController extends Controller
 
     public function store(StoreBlogRequest $request): BlogResource|JsonResponse
     {
-        if ($request->user()->blog()->count() === 0) {
-            $blog = Blog::query()->create(array_merge(
-                $request->validated(),
-                [
-                    'user_id' => $request->user()->id
-                ]
-            ));
+        $authUser = $request->user();
+
+        if ($authUser->blogs()->count() === 0) {
+            $blog = $authUser->blogs()->create($request->validated());
+
+            $authUser->update(['role' => UserRole::Blogger]);
+            $blog->load(['author']);
 
             return new BlogResource($blog);
         }

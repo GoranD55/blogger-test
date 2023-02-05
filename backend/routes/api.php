@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogsController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,11 @@ Route::group(['as' => 'api.'], function() {
 
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::get('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
+
+        Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
+            Route::get('/profile', [UsersController::class, 'profile'])->name('profile');
+            Route::put('/profile', [UsersController::class, 'updateProfile'])->name('update-profile');
+        });
 
         Route::group(['prefix' => 'blogs', 'as' => 'blogs.'], function () {
             Route::get('/', [BlogsController::class, 'index'])->name('index');

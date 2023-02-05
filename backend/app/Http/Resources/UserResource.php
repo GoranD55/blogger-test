@@ -20,6 +20,7 @@ class UserResource extends JsonResource
             'email' => $this->resource->email,
             'role' => $this->resource->role,
             'avatar' => $this->resource->avatar,
+            'blog' => new BlogResource($this->whenLoaded('blogs')),
         ];
     }
 }

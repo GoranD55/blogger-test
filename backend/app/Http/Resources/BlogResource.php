@@ -22,7 +22,8 @@ class BlogResource extends JsonResource
             'isPublic' => $this->resource->is_public,
             'author' => new UserResource($this->whenLoaded('author')),
             'createdAt' => $this->resource->created_at,
-            'updatedAt' => $this->resource->updated_at
+            'updatedAt' => $this->resource->updated_at,
+            'isDeleted' => $this->resource->deleted_at !== null,
         ];
     }
 }

@@ -5,7 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -23,7 +23,9 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'email',
+        'role',
         'password',
+        'avatar',
     ];
 
     /**
@@ -51,8 +53,8 @@ class User extends Authenticatable
         'avatar' => '/avatars/default.png',
     ];
 
-    public function blog(): HasOne
+    public function blogs(): HasMany
     {
-        return $this->hasOne(Blog::class);
+        return $this->hasMany(Blog::class);
     }
 }
