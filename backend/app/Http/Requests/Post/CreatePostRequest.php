@@ -1,27 +1,30 @@
 <?php
 
-namespace App\Http\Requests\Category;
+namespace App\Http\Requests\Post;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class IndexCategoriesRequest extends FormRequest
+class CreatePostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize(): bool
+    public function authorize()
     {
-        return true;
+        return false;
     }
+
     /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, mixed>
      */
-    public function rules(): array
+    public function rules()
     {
-        return [];
+        return [
+            //
+        ];
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Blog;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,16 +15,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('blogs', function (Blueprint $table) {
+        Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class);
-            $table->string('name')->unique();
-            $table->string('description');
-            $table->boolean('is_public');
+            $table->foreignIdFor(Blog::class);
+            $table->string('title');
+            $table->text('text');
+            $table->json('categories_ids');
             $table->timestamps();
-            $table->softDeletes();
 
             $table->foreign('user_id')->on('users')->references('id');
+            $table->foreign('blog_id')->on('blogs')->references('id');
         });
     }
 
@@ -34,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('blogs');
+        Schema::dropIfExists('posts');
     }
 };

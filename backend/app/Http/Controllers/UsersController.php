@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\FailedConvertImageFromBase64Exception;
 use App\Http\Requests\User\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
-use App\Services\AvatarsService;
-use Exception;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Services\UserService;
+use ErrorException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -14,38 +14,44 @@ use Illuminate\Support\Facades\Log;
 
 class UsersController extends Controller
 {
+    private UserService $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function profile(Request $request): UserResource
     {
-        $profile = $request->user()->load([
-            'blogs' => function (HasMany $relation) {
-                $relation->withTrashed()->latest();
-            }
-        ]);
-
-        $profile->blogs = $profile->blogs->first();
+        $profile = $request->user()->load('blog');
 
         return new UserResource($profile);
     }
 
-    public function updateProfile(UpdateProfileRequest $request): UserResource|JsonResponse
-    {
+    public function updateProfile(
+        UpdateProfileRequest $request,
+    ): UserResource|JsonResponse {
         $requestData = $request->validated();
 
         if (isset($requestData['avatar']) && !empty($requestData['avatar'])) {
             try {
-                $avatarsService = new AvatarsService();
-                $requestData['avatar'] = $avatarsService->storeAvatar($request->validated()['avatar']);
-            } catch (Exception $exception) {
+                $avatarPath = $this->userService->uploadUserAvatar($requestData['avatar']);
+
+                if (!is_bool($avatarPath)) {
+                    $requestData['avatar'] = $avatarPath;
+                }
+
+            } catch (FailedConvertImageFromBase64Exception|ErrorException) {
                 Log::error(
                     'Cannot upload user avatar',
                     [
-                        'exception' => $exception->getMessage(),
+                        'exception' => 'Failed to open stream: Bad base64 format',
                     ]
                 );
 
                 return response()->json([
                     'message' => 'Cannot upload image file!',
-                    'error' => $exception->getMessage()
+                    'error' => 'Failed to convert file from base 64 format'
                 ], 400);
             }
         }

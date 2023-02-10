@@ -3,9 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Blog;
-use App\Models\Category;
+use App\Models\Post;
 use App\Policies\BlogPolicy;
-use App\Policies\CategoryPolicy;
+use App\Policies\PostPolicy;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -18,7 +18,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Blog::class => BlogPolicy::class,
-        Category::class => CategoryPolicy::class,
+        Post::class => PostPolicy::class,
     ];
 
     /**

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ArchiveBlogAction;
 use App\Enums\UserRole;
+use App\Events\ArchiveBlogEvent;
 use App\Http\Requests\Blog\DeleteBlogRequest;
 use App\Http\Requests\Blog\RestoreBlogRequest;
 use App\Http\Requests\Blog\StoreBlogRequest;
@@ -63,6 +65,8 @@ class BlogsController extends Controller
     {
         $blog->delete();
 
+        event(new ArchiveBlogEvent($blog, ArchiveBlogAction::Delete));
+
         return response()->json([
             'message' => 'Blog has been successfully deleted'
         ]);
@@ -71,6 +75,8 @@ class BlogsController extends Controller
     public function restore(RestoreBlogRequest $request, Blog $blog): BlogResource
     {
         $blog->restore();
+
+        event(new ArchiveBlogEvent($blog, ArchiveBlogAction::Recover));
 
         return new BlogResource($blog);
     }

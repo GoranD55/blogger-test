@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -52,6 +53,11 @@ class User extends Authenticatable
         'role' => UserRole::Reader,
         'avatar' => '/avatars/default.png',
     ];
+
+    public function blog(): HasOne
+    {
+        return $this->hasOne(Blog::class)->withTrashed()->latest();
+    }
 
     public function blogs(): HasMany
     {
