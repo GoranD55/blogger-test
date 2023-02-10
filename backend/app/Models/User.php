@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -46,7 +45,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'role' => UserRole::class,
-        'email_verified_at' => 'datetime',
     ];
 
     protected $attributes = [
@@ -62,6 +60,11 @@ class User extends Authenticatable
     public function blogs(): HasMany
     {
         return $this->hasMany(Blog::class);
+    }
+
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
     }
 
     public function isBlogger(): bool

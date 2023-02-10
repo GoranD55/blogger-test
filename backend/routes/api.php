@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogsController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\PostsController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +47,11 @@ Route::group(['as' => 'api.'], function() {
             Route::delete('/{blog}', [BlogsController::class, 'destroy'])->name('destroy');
             Route::get('/{blog}/restore', [BlogsController::class, 'restore'])->name('restore');
         });
+
+            Route::resource('posts',  PostsController::class)
+                ->only(['index', 'store', 'update', 'destroy']);
+
+        Route::get('users/{user_id}/posts', [PostsController::class, 'getUserPosts'])->name('posts.user-posts');
 
         Route::group(['prefix' => 'categories', 'as' => 'categories.'], function () {
             Route::get('/', [CategoriesController::class, 'index'])->name('index');

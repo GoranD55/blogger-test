@@ -14,6 +14,14 @@ class PostResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->resource->id,
+            'title' => $this->resource->title,
+            'text' => $this->resource->text,
+            'author' => $this->whenLoaded('author'),
+            'categoriesIds' => $this->resource->categories_ids,
+            'createdAt' => $this->resource->created_at,
+            //todo: add images from morph relation
+        ];
     }
 }
