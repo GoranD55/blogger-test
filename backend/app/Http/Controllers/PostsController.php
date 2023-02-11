@@ -38,7 +38,7 @@ class PostsController extends Controller
             $requestData,
             [
                 'user_id' => auth()->id(),
-                'blog_id' => auth()->user()->blog()->id
+                'blog_id' => auth()->user()->blog->id
             ]
         ));
 

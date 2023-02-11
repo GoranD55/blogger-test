@@ -4,11 +4,16 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use Illuminate\Database\Seeder;
+use Psr\SimpleCache\InvalidArgumentException;
 
 class CategoriesSeeder extends Seeder
 {
     public function run(): void
     {
+        try {
+            cache()->delete('categories');
+        } catch (InvalidArgumentException) {}
+
         $categories = [
             ['name' => 'Новости'],
             ['name' => 'Автомобили'],

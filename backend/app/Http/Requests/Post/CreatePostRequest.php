@@ -27,8 +27,8 @@ class CreatePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'min:8', 'max:255'],
-            'text' => ['required', 'text', 'min:8'],
+            'title' => ['required', 'string', 'min:3', 'max:255'],
+            'text' => ['required', 'string', 'min:8'],
             'categories_ids' => ['required', 'array'],
             'categories_ids.*' => Rule::forEach(function () {
                 return [
@@ -36,6 +36,13 @@ class CreatePostRequest extends FormRequest
                 ];
             }),
             'images' => ['sometimes'],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'categories_ids.*' => 'Category with :input id does not exist'
         ];
     }
 }

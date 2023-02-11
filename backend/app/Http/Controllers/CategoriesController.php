@@ -11,6 +11,10 @@ class CategoriesController extends Controller
 {
     public function index(IndexCategoriesRequest $request): AnonymousResourceCollection
     {
-        return CategoryResource::collection(Category::query()->get());
+        $categories = cache()->sear('categories', function () {
+            return Category::query()->get();
+        });
+
+        return CategoryResource::collection($categories);
     }
 }
