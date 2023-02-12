@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\UserRole;
 use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -21,6 +22,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property DateTime $created_at
  * @property Blog $blog
  * @property Post[] $posts
+ * @property Blog[] $blogSubscriptions
  */
 class User extends Authenticatable
 {
@@ -77,6 +79,16 @@ class User extends Authenticatable
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function blogSubscriptions(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Blog::class,
+            'blog_subscribers',
+            'user_id',
+            'blog_id'
+        );
     }
 
     public function isBlogger(): bool

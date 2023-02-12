@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogsController;
+use App\Http\Controllers\BlogSubscribersController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\PostsController;
@@ -41,7 +42,11 @@ Route::group(['as' => 'api.'], function() {
         });
 
         Route::resource('blogs', BlogsController::class)->except(['create', 'edit']);
-        Route::get('blogs/{blog}/restore', [BlogsController::class, 'restore'])->name('blogs.restore');
+        Route::group(['prefix' => 'blogs', 'as' => 'blogs.'], function () {
+            Route::get('/{blog}/restore', [BlogsController::class, 'restore'])->name('restore');
+            Route::get('/{blog}/subscribe', [BlogSubscribersController::class, 'subscribe'])->name('subscribe');
+            Route::get('/{blog}/unsubscribe', [BlogSubscribersController::class, 'unsubscribe'])->name('unsubscribe');
+        });
 
         Route::resource('posts',  PostsController::class)
             ->only(['index', 'store', 'update', 'destroy']);

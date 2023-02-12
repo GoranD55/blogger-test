@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property DateTime $deleted_at
  * @property User $author
  * @property Post[] $posts
+ * @property User[] $subscribers
  */
 class Blog extends Model
 {
@@ -48,6 +50,16 @@ class Blog extends Model
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function subscribers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'blog_subscribers',
+            'blog_id',
+            'user_id'
+        );
     }
 
     public function scopeSearch(Builder $query, array $searchParams): Builder
