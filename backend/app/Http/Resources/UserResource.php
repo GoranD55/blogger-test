@@ -2,8 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/** @property-read User $resource */
 class UserResource extends JsonResource
 {
     /**
@@ -12,7 +14,7 @@ class UserResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    public function toArray($request)
+    public function toArray($request): array
     {
         return [
             'id' => $this->resource->id,

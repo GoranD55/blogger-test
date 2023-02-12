@@ -2,11 +2,25 @@
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property-read int $id
+ * @property int $user_id
+ * @property int $blog_id
+ * @property string $title
+ * @property string $text
+ * @property string $categories_ids
+ * @property DateTime $created_at
+ * @property DateTime $updated_at
+ * @property User $author
+ * @property Blog $blog
+ * @property Comment[] $comments
+ */
 class Post extends Model
 {
     use HasFactory;

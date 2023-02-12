@@ -2,8 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Blog;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/** @property-read Blog $resource */
 class BlogResource extends JsonResource
 {
     /**

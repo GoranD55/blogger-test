@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\UserRole;
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -10,6 +11,17 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @property-read int $id
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $email
+ * @property UserRole $role
+ * @property string $avatar
+ * @property DateTime $created_at
+ * @property Blog $blog
+ * @property Post[] $posts
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\IsOwnedByTrait;
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,6 +11,18 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property-read int $id
+ * @property int $user_id
+ * @property string $name
+ * @property string $description
+ * @property bool $is_public
+ * @property DateTime $created_at
+ * @property DateTime $updated_at
+ * @property DateTime $deleted_at
+ * @property User $author
+ * @property Post[] $posts
+ */
 class Blog extends Model
 {
     use HasFactory,

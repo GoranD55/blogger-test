@@ -6,7 +6,7 @@ use App\Enums\ArchiveBlogAction;
 use App\Enums\UserRole;
 use App\Events\ArchiveBlogEvent;
 
-class UpdateUserRoleListener
+class UpdateUserRole
 {
     public function handle(ArchiveBlogEvent $archiveBlogEvent): void
     {

@@ -2,8 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Comment;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/** @property-read Comment $resource */
 class CommentResource extends JsonResource
 {
     /**

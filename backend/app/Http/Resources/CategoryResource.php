@@ -2,8 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Category;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/** @property-read Category $resource */
 class CategoryResource extends JsonResource
 {
     /**
