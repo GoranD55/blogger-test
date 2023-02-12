@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PostResource extends JsonResource
+class CommentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -12,16 +12,14 @@ class PostResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    public function toArray($request)
+    public function toArray($request): array
     {
         return [
             'id' => $this->resource->id,
-            'title' => $this->resource->title,
             'text' => $this->resource->text,
-            'author' => new UserResource($this->whenLoaded('author')),
-            'categoriesIds' => $this->resource->categories_ids,
-            'createdAt' => $this->resource->created_at,
-            //todo: add images from morph relation
+            'createAt' => $this->resource->created_at,
+            'comments' => CommentResource::collection($this->whenLoaded('comments')),
+            'user' =>  new UserResource($this->whenLoaded('user')),
         ];
     }
 }

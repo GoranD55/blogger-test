@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogsController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
@@ -39,17 +40,16 @@ Route::group(['as' => 'api.'], function() {
             Route::put('/profile', [UsersController::class, 'updateProfile'])->name('update-profile');
         });
 
-        Route::group(['prefix' => 'blogs', 'as' => 'blogs.'], function () {
-            Route::get('/', [BlogsController::class, 'index'])->name('index');
-            Route::get('/{blog}', [BlogsController::class, 'show'])->name('show');
-            Route::post('/', [BlogsController::class, 'store'])->name('store');
-            Route::put('/{blog}', [BlogsController::class, 'update'])->name('update');
-            Route::delete('/{blog}', [BlogsController::class, 'destroy'])->name('destroy');
-            Route::get('/{blog}/restore', [BlogsController::class, 'restore'])->name('restore');
-        });
+        Route::resource('blogs', BlogsController::class)->except(['create', 'edit']);
+        Route::get('blogs/{blog}/restore', [BlogsController::class, 'restore'])->name('blogs.restore');
 
-            Route::resource('posts',  PostsController::class)
-                ->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('posts',  PostsController::class)
+            ->only(['index', 'store', 'update', 'destroy']);
+
+        Route::group(['prefix' => 'posts/{post}/comments', 'as' => 'comments'], function () {
+            Route::get('/', [CommentsController::class, 'index'])->name('index');
+            Route::post('/', [CommentsController::class, 'store'])->name('index');
+        });
 
         Route::get('users/{user_id}/posts', [PostsController::class, 'getUserPosts'])->name('posts.user-posts');
 
