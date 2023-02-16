@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\FailedConvertImageFromBase64Exception;
+use App\Exceptions\FailedUploadImageException;
 use App\Http\Requests\Post\CreatePostRequest;
 use App\Http\Requests\Post\DeletePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
@@ -55,7 +55,7 @@ class PostsController extends Controller
 //                }
 
             return new PostResource($post);
-        } catch (FailedConvertImageFromBase64Exception|ErrorException) {
+        } catch (FailedUploadImageException|ErrorException) {
             Log::error(
                 'Cannot upload post image',
                 [

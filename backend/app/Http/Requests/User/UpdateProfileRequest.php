@@ -27,7 +27,7 @@ class UpdateProfileRequest extends FormRequest
             'first_name' => ['sometimes', 'string', 'min:3', 'max:50'],
             'last_name' => ['sometimes', 'string', 'min:3', 'max:50'],
             'email' => ['sometimes', 'email', 'unique:users'],
-            'avatar' => ['sometimes', 'string'],
+            'avatar' => ['sometimes', 'image'],
             'password' => ['sometimes', 'string', 'min:8', 'confirmed'],
         ];
     }

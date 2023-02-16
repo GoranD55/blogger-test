@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\FailedConvertImageFromBase64Exception;
+use App\Exceptions\FailedUploadImageException;
 use App\Http\Requests\User\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
 use App\Services\UserService;
@@ -31,27 +31,22 @@ class UsersController extends Controller
     public function updateProfile(
         UpdateProfileRequest $request,
     ): UserResource|JsonResponse {
+        $authUser = $request->user();
         $requestData = $request->validated();
 
-        if (isset($requestData['avatar']) && !empty($requestData['avatar'])) {
+        if ($request->hasFile('avatar')) {
             try {
-                $avatarPath = $this->userService->uploadUserAvatar($requestData['avatar']);
-
-                if (!is_bool($avatarPath)) {
-                    $requestData['avatar'] = $avatarPath;
-                }
-
-            } catch (FailedConvertImageFromBase64Exception|ErrorException) {
+                $requestData['avatar'] = $this->userService->uploadUserAvatar($authUser, $request->file('avatar'));
+            } catch (FailedUploadImageException|ErrorException $exception) {
                 Log::error(
                     'Cannot upload user avatar',
                     [
-                        'exception' => 'Failed to open stream: Bad base64 format',
+                        'exception' =>  $exception->getMessage(),
                     ]
                 );
 
                 return response()->json([
-                    'message' => 'Cannot upload image file!',
-                    'error' => 'Failed to convert file from base 64 format'
+                    'message' => 'Failed upload user avatar',
                 ], 400);
             }
         }
@@ -59,8 +54,6 @@ class UsersController extends Controller
         if (isset($requestData['password'])) {
             $requestData['password'] = Hash::make($requestData['password']);
         }
-
-        $authUser = $request->user();
 
         $authUser->update($requestData);
 

@@ -3,31 +3,23 @@ declare(strict_types=1);
 
 namespace App\Services\Storage;
 
-use App\Exceptions\FailedConvertImageFromBase64Exception;
-use ErrorException;
-use Illuminate\Support\Str;
+use App\Exceptions\FailedUploadImageException;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class FileUploadService
 {
-    /**
-     * @throws FailedConvertImageFromBase64Exception|ErrorException
-     */
-    public function uploadBase64Image(string $base64Data, string $folder): string|bool
+    public function uploadImage(UploadedFile $image, string $folder, ?string $disk = 'public'): string
     {
-        $imageContent = file_get_contents($base64Data);
+        $filePath = Storage::disk($disk)->putFile(
+            $folder,
+            $image
+        );
 
-        if (!$imageContent) {
-            throw new FailedConvertImageFromBase64Exception();
+        if (!$filePath) {
+            throw new FailedUploadImageException();
         }
 
-        return StorageService::put(
-            $folder . DIRECTORY_SEPARATOR . $this->generateFileName('jpg'),
-            $imageContent
-        );
-    }
-
-    private function generateFileName(string $extension): string
-    {
-        return Str::random() . '.' . $extension;
+        return DIRECTORY_SEPARATOR . $filePath;
     }
 }

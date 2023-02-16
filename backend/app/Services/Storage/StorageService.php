@@ -3,15 +3,15 @@ declare(strict_types=1);
 
 namespace App\Services\Storage;
 
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Image;
 
 abstract class StorageService
 {
     public const AVATARS_FOLDER = 'avatars';
     public const POSTS_FOLDER = 'posts';
 
-    public static function put(string $path, string|Image $file, string $visibility = 'public'): string|bool
+    public static function put(string $path, UploadedFile $file, string $visibility = 'public'): string|bool
     {
         Storage::put(
             $path,

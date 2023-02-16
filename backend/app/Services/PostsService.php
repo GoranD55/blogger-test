@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Exceptions\FailedConvertImageFromBase64Exception;
+use App\Exceptions\FailedUploadImageException;
 use App\Models\Post;
-use App\Models\User;
 use App\Services\Storage\FileUploadService;
 use App\Services\Storage\StorageService;
 use ErrorException;
@@ -34,7 +33,7 @@ class PostsService
     }
 
     /**
-     * @throws FailedConvertImageFromBase64Exception|ErrorException
+     * @throws FailedUploadImageException|ErrorException
      */
     public function create(array $requestData): Post
     {
