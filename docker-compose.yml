@@ -45,27 +45,39 @@ services:
             timeout: 10s
             retries: 5
         ports:
-            - '9000:80'
+            - '8000:80'
 
     php-fpm:
         build: phpdocker/php-fpm
         container_name: blogger-api-php-fpm
-        working_dir: /application
+        working_dir: /application/backend
         volumes:
             - '.:/application'
             - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.2/fpm/conf.d/99-overrides.ini'
 
-    swagger-ui:
-        image: swaggerapi/swagger-ui
-        container_name: blogger-api-openapi
-        ports:
-            - "3000:8080"
-        volumes:
-            - './backend/openapi:/usr/share/nginx/html/openapi'
+#    swagger-ui:
+#        image: swaggerapi/swagger-ui
+#        container_name: blogger-api-openapi
+#        ports:
+#            - "3000:8080"
+#        volumes:
+#            - './backend/openapi:/usr/share/nginx/html/openapi'
+#        environment:
+#            API_URL: ./openapi/index.yaml
+#            URLS: "[{ url: './openapi/index.yaml', name: 'Blogger Open API'},
+#                  ]"
+
+    node:
+        image: node:17
+        container_name: blogger-ui-node
+        working_dir: /application/frontend
         environment:
-            API_URL: ./openapi/index.yaml
-            URLS: "[{ url: './openapi/index.yaml', name: 'Blogger Open API'},
-                  ]"
+            - NODE_ENV=development
+        volumes:
+            - '.:/application'
+        command: 'tail -f /dev/null'
+        ports:
+            - "8080:8080"
 
 volumes:
     blogger-api-mysql-volume:
